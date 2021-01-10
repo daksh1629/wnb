@@ -1,0 +1,78 @@
+###
+
+
+
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(12,11,5,4,3,2);
+int lenth,lenth1,i=0,temp;
+char str[100];
+char name[25];
+void setup()
+{
+  lcd.begin(16,2);
+  Serial.begin(9600);
+}
+void loop()
+{
+  lcd.setCursor(16,0);
+  lcd.print("ENGINEERS GARAGE");
+  Serial.println("AT+CNMI=2,2,0,0,0");
+  delay(100);
+  lcd.setCursor(16,0);
+  while(1)
+  { 
+   for(int j=0;j<400;j++)
+   {
+    serialEvent();
+    delay(1);   
+   }
+   if(temp==1)
+   {
+    i=0;
+    lenth1=0;
+    lcd.setCursor(0,1);
+    while(i<lenth)
+    {
+     if(str[i]=='*')
+     {
+      i++; 
+      while(str[i]!='#')
+      {
+       name[lenth1]=str[i];
+       lenth1++;
+       i++;
+      }
+      for(lenth1;lenth1<25;lenth1++)
+      {
+      name[lenth1]=' ';
+      }
+     }
+    i++; 
+    }
+    lcd.setCursor(16,0);
+    delay(10);
+    lcd.print(name);
+    temp=0;
+    lenth=0;
+   }
+    lcd.scrollDisplayLeft();
+    serialEvent();
+    delay(1);
+  }
+}
+ void serialEvent() 
+{
+  while (Serial.available()) 
+  {
+    char inChar = (char)Serial.read(); 
+    str[lenth]=inChar;
+    lenth++;
+    if (inChar == 'n')
+    {
+      temp=1;     
+    } 
+  }
+}
+
+
+###
